@@ -1,7 +1,7 @@
-cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
+cordova.define('cordova-plugin-inappbrowser.InAppBrowserProxy', function(
   require,
   exports,
-  module
+  module,
 ) {
   /*
  *
@@ -24,7 +24,7 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
  *
 */
 
-  var modulemapper = require("cordova/modulemapper");
+  var modulemapper = require('cordova/modulemapper');
 
   var browserWrap,
     popup,
@@ -38,48 +38,48 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
     var onError = function() {
       try {
         callback(
-          { type: "loaderror", url: this.contentWindow.location.href },
-          { keepCallback: true }
+          {type: 'loaderror', url: this.contentWindow.location.href},
+          {keepCallback: true},
         ); // eslint-disable-line standard/no-callback-literal
       } catch (err) {
         // blocked by CORS :\
-        callback({ type: "loaderror", url: null }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
+        callback({type: 'loaderror', url: null}, {keepCallback: true}); // eslint-disable-line standard/no-callback-literal
       }
     };
 
-    element.addEventListener("pageshow", function() {
+    element.addEventListener('pageshow', function() {
       try {
         callback(
-          { type: "loadstart", url: this.contentWindow.location.href },
-          { keepCallback: true }
+          {type: 'loadstart', url: this.contentWindow.location.href},
+          {keepCallback: true},
         ); // eslint-disable-line standard/no-callback-literal
       } catch (err) {
         // blocked by CORS :\
-        callback({ type: "loadstart", url: null }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
+        callback({type: 'loadstart', url: null}, {keepCallback: true}); // eslint-disable-line standard/no-callback-literal
       }
     });
 
-    element.addEventListener("load", function() {
+    element.addEventListener('load', function() {
       try {
         callback(
-          { type: "loadstop", url: this.contentWindow.location.href },
-          { keepCallback: true }
+          {type: 'loadstop', url: this.contentWindow.location.href},
+          {keepCallback: true},
         ); // eslint-disable-line standard/no-callback-literal
       } catch (err) {
         // blocked by CORS :\
-        callback({ type: "loadstop", url: null }, { keepCallback: true }); // eslint-disable-line standard/no-callback-literal
+        callback({type: 'loadstop', url: null}, {keepCallback: true}); // eslint-disable-line standard/no-callback-literal
       }
     });
 
-    element.addEventListener("error", onError);
-    element.addEventListener("abort", onError);
+    element.addEventListener('error', onError);
+    element.addEventListener('abort', onError);
   }
 
   var IAB = {
     close: function(win, lose) {
       if (browserWrap) {
         // use the "open" function callback so that the exit event is fired properly
-        if (IAB._win) IAB._win({ type: "exit" });
+        if (IAB._win) IAB._win({type: 'exit'});
 
         browserWrap.parentNode.removeChild(browserWrap);
         browserWrap = null;
@@ -89,7 +89,7 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
 
     show: function(win, lose) {
       if (browserWrap) {
-        browserWrap.style.display = "block";
+        browserWrap.style.display = 'block';
       }
     },
 
@@ -100,31 +100,31 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
 
       IAB._win = win;
 
-      if (target === "_self" || !target) {
+      if (target === '_self' || !target) {
         window.location = strUrl;
-      } else if (target === "_system") {
+      } else if (target === '_system') {
         modulemapper
-          .getOriginalSymbol(window, "window.open")
-          .call(window, strUrl, "_blank");
-      } else {
+          .getOriginalSymbol(window, 'window.open')
+          .call(window, strUrl, '_blank');
+      } else if (target === '_inapp') {
         // "_blank" or anything else
         if (!browserWrap) {
-          browserWrap = document.createElement("div");
-          browserWrap.style.position = "absolute";
-          browserWrap.style.top = "0";
-          browserWrap.style.left = "0";
-          browserWrap.style.boxSizing = "border-box";
-          browserWrap.style.borderWidth = "40px";
-          browserWrap.style.width = "100vw";
-          browserWrap.style.height = "100vh";
-          browserWrap.style.borderStyle = "solid";
-          browserWrap.style.borderColor = "rgba(0,0,0,0.25)";
+          browserWrap = document.createElement('div');
+          browserWrap.style.position = 'absolute';
+          browserWrap.style.top = '0';
+          browserWrap.style.left = '0';
+          browserWrap.style.boxSizing = 'border-box';
+          browserWrap.style.borderWidth = '40px';
+          browserWrap.style.width = '100vw';
+          browserWrap.style.height = '100vh';
+          browserWrap.style.borderStyle = 'solid';
+          browserWrap.style.borderColor = 'rgba(0,0,0,0.25)';
 
           // カスタマイズ
-          browserWrap.style.borderWidth = "0px";
-          browserWrap.style.height = "100vh";
-          browserWrap.style.overflow = "auto";
-          browserWrap.style.webkitOverflowScrolling = "touch";
+          browserWrap.style.borderWidth = '0px';
+          browserWrap.style.height = '100vh';
+          browserWrap.style.overflow = 'auto';
+          browserWrap.style.webkitOverflowScrolling = 'touch';
 
           browserWrap.onclick = function() {
             setTimeout(function() {
@@ -135,84 +135,84 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
           document.body.appendChild(browserWrap);
         }
 
-        if (features.indexOf("hidden=yes") !== -1) {
-          browserWrap.style.display = "none";
+        if (features.indexOf('hidden=yes') !== -1) {
+          browserWrap.style.display = 'none';
         }
 
-        popup = document.createElement("iframe");
-        popup.style.borderWidth = "0px";
-        popup.style.width = "100%";
+        popup = document.createElement('iframe');
+        popup.style.borderWidth = '0px';
+        popup.style.width = '100%';
 
         //browserWrap.appendChild(popup);
 
         if (
-          features.indexOf("location=yes") !== -1 ||
-          features.indexOf("location") === -1
+          features.indexOf('location=yes') !== -1 ||
+          features.indexOf('location') === -1
         ) {
           // カスタマイズ
           //popup.style.height = "calc(100% - 60px)";
           //popup.style.marginBottom = "-4px";
 
-          navigationButtonsDiv = document.createElement("div");
-          navigationButtonsDiv.style.height = "60px";
-          navigationButtonsDiv.style.backgroundColor = "#404040";
-          navigationButtonsDiv.style.zIndex = "999";
+          navigationButtonsDiv = document.createElement('div');
+          navigationButtonsDiv.style.height = '60px';
+          navigationButtonsDiv.style.backgroundColor = '#404040';
+          navigationButtonsDiv.style.zIndex = '999';
           navigationButtonsDiv.onclick = function(e) {
             e.cancelBubble = true;
           };
 
-          navigationButtonsDivInner = document.createElement("div");
-          navigationButtonsDivInner.style.paddingTop = "10px";
-          navigationButtonsDivInner.style.height = "50px";
-          navigationButtonsDivInner.style.width = "160px";
-          navigationButtonsDivInner.style.margin = "0 auto";
-          navigationButtonsDivInner.style.backgroundColor = "#404040";
-          navigationButtonsDivInner.style.zIndex = "999";
+          navigationButtonsDivInner = document.createElement('div');
+          navigationButtonsDivInner.style.paddingTop = '10px';
+          navigationButtonsDivInner.style.height = '50px';
+          navigationButtonsDivInner.style.width = '160px';
+          navigationButtonsDivInner.style.margin = '0 auto';
+          navigationButtonsDivInner.style.backgroundColor = '#404040';
+          navigationButtonsDivInner.style.zIndex = '999';
           navigationButtonsDivInner.onclick = function(e) {
             e.cancelBubble = true;
           };
 
-          backButton = document.createElement("button");
-          backButton.style.width = "40px";
-          backButton.style.height = "40px";
-          backButton.style.borderRadius = "40px";
+          backButton = document.createElement('button');
+          backButton.style.width = '40px';
+          backButton.style.height = '40px';
+          backButton.style.borderRadius = '40px';
 
-          backButton.innerHTML = "←";
-          backButton.addEventListener("click", function(e) {
+          backButton.innerHTML = '←';
+          backButton.addEventListener('click', function(e) {
             if (popup.canGoBack) {
               popup.goBack();
             }
           });
 
-          forwardButton = document.createElement("button");
-          forwardButton.style.marginLeft = "20px";
-          forwardButton.style.width = "40px";
-          forwardButton.style.height = "40px";
-          forwardButton.style.borderRadius = "40px";
+          forwardButton = document.createElement('button');
+          forwardButton.style.marginLeft = '20px';
+          forwardButton.style.width = '40px';
+          forwardButton.style.height = '40px';
+          forwardButton.style.borderRadius = '40px';
 
-          forwardButton.innerHTML = "→";
-          forwardButton.addEventListener("click", function(e) {
+          forwardButton.innerHTML = '→';
+          forwardButton.addEventListener('click', function(e) {
             if (popup.canGoForward) {
               popup.goForward();
             }
           });
 
-          closeButton = document.createElement("button");
-          closeButton.style.marginLeft = "20px";
-          closeButton.style.width = "40px";
-          closeButton.style.height = "40px";
-          closeButton.style.borderRadius = "40px";
+          closeButton = document.createElement('button');
+          closeButton.style.marginLeft = '20px';
+          closeButton.style.width = '40px';
+          closeButton.style.height = '40px';
+          closeButton.style.borderRadius = '40px';
 
           // カスタマイズ
-          closeButton.style.marginLeft = "10px";
-          closeButton.style.color = "white";
-          closeButton.style.fontWeight = "bold";
-          closeButton.style.fontSize = "32px";
-          closeButton.style.position = "absolute";
-          closeButton.style.top = "0";
+          closeButton.style.marginLeft = '10px';
+          closeButton.style.color = 'white';
+          closeButton.style.fontWeight = 'bold';
+          closeButton.style.fontSize = '32px';
+          closeButton.style.position = 'absolute';
+          closeButton.style.top = '0';
 
           closeButton.innerHTML = '<span style="color:white">×</span>';
-          closeButton.addEventListener("click", function(e) {
+          closeButton.addEventListener('click', function(e) {
             setTimeout(function() {
               IAB.close();
             }, 0);
@@ -230,7 +230,7 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
           //browserWrap.appendChild(navigationButtonsDiv);
           browserWrap.appendChild(closeButton);
         } else {
-          popup.style.height = "100%";
+          popup.style.height = '100%';
         }
 
         browserWrap.appendChild(popup);
@@ -238,6 +238,10 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
         attachNavigationEvents(popup, win);
 
         popup.src = strUrl;
+      } else {
+        modulemapper
+          .getOriginalSymbol(window, 'window.open')
+          .call(window, strUrl, '_blank');
       }
     },
 
@@ -253,8 +257,8 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
           }
         } catch (e) {
           console.error(
-            "Error occured while trying to injectScriptCode: " +
-              JSON.stringify(e)
+            'Error occured while trying to injectScriptCode: ' +
+              JSON.stringify(e),
           );
         }
       }
@@ -262,7 +266,7 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
 
     injectScriptFile: function(win, fail, args) {
       var msg =
-        "Browser cordova-plugin-inappbrowser injectScriptFile is not yet implemented";
+        'Browser cordova-plugin-inappbrowser injectScriptFile is not yet implemented';
       console.warn(msg);
       if (fail) {
         fail(msg);
@@ -271,7 +275,7 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
 
     injectStyleCode: function(win, fail, args) {
       var msg =
-        "Browser cordova-plugin-inappbrowser injectStyleCode is not yet implemented";
+        'Browser cordova-plugin-inappbrowser injectStyleCode is not yet implemented';
       console.warn(msg);
       if (fail) {
         fail(msg);
@@ -280,15 +284,15 @@ cordova.define("cordova-plugin-inappbrowser.InAppBrowserProxy", function(
 
     injectStyleFile: function(win, fail, args) {
       var msg =
-        "Browser cordova-plugin-inappbrowser injectStyleFile is not yet implemented";
+        'Browser cordova-plugin-inappbrowser injectStyleFile is not yet implemented';
       console.warn(msg);
       if (fail) {
         fail(msg);
       }
-    }
+    },
   };
 
   module.exports = IAB;
 
-  require("cordova/exec/proxy").add("InAppBrowser", module.exports);
+  require('cordova/exec/proxy').add('InAppBrowser', module.exports);
 });
