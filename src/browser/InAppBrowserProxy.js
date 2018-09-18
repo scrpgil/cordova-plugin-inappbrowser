@@ -103,7 +103,9 @@ var IAB = {
                 browserWrap.style.height = '100vh';
                 browserWrap.style.borderStyle = 'solid';
                 browserWrap.style.borderColor = 'rgba(0,0,0,0.25)';
-
+                browserWrap.style.overflow = "auto";
+                browserWrap.style.WebkitOverflowScrolling = "touch";
+      
                 browserWrap.onclick = function () {
                     setTimeout(function () {
                         IAB.close();
