@@ -142,6 +142,7 @@ cordova.define('cordova-plugin-inappbrowser.InAppBrowserProxy', function(
         popup = document.createElement('iframe');
         popup.style.borderWidth = '0px';
         popup.style.width = '100%';
+        popup.style.height = '100%';
 
         //browserWrap.appendChild(popup);
 
